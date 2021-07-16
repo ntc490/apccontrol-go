@@ -5,6 +5,25 @@ import (
 	"github.com/docopt/docopt-go"
 )
 
+type ConfigFile struct {
+	Filename string
+}
+
+var args struct {
+	On       bool   `docopt:"on"`
+	Off      bool   `docopt:"off"`
+	Reset    bool   `docopt:"reset"`
+	List     bool   `docopt:"list"`
+	SetAlias bool   `docopt:"set-alias"`
+	RmAlias  bool   `docopt:"rm-alias"`
+	SetHost  bool   `docopt:"set-host"`
+	Port     string `docopt:"<port>"`
+	Name     string `docopt:"<name>"`
+	Num      int    `docopt:"<num>"`
+	Hostname string `docopt:"<hostname>"`
+	Filename string `docopt:"--config"`
+}
+
 func main() {
 	usage := `apc - Control APC network power strip
 
@@ -28,6 +47,14 @@ Commands:
 Options:
   --config <filename>    Point to custom config file [default: ~/.config/apc/config]`
 
-	args, _ := docopt.ParseDoc(usage)
+	rawArgs, _ := docopt.ParseArgs(usage, nil, "1.0")
+	rawArgs.Bind(&args)
 	fmt.Println(args)
+	config := ConfigFile{args.Filename}
+	run_command(config)
+}
+
+func run_command(config ConfigFile) (err error) {
+	fmt.Println(config)
+	return nil
 }
