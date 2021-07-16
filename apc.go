@@ -6,10 +6,6 @@ import (
 	"github.com/docopt/docopt-go"
 )
 
-type ConfigFile struct {
-	Filename string
-}
-
 type Args struct {
 	On       bool   `docopt:"on"`
 	Off      bool   `docopt:"off"`
