@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/docopt/docopt-go"
 )
@@ -9,7 +10,7 @@ type ConfigFile struct {
 	Filename string
 }
 
-var args struct {
+type Args struct {
 	On       bool   `docopt:"on"`
 	Off      bool   `docopt:"off"`
 	Reset    bool   `docopt:"reset"`
@@ -48,13 +49,67 @@ Options:
   --config <filename>    Point to custom config file [default: ~/.config/apc/config]`
 
 	rawArgs, _ := docopt.ParseArgs(usage, nil, "1.0")
+	var args Args
 	rawArgs.Bind(&args)
 	fmt.Println(args)
 	config := ConfigFile{args.Filename}
-	run_command(config)
+	runCommand(args, config)
 }
 
-func run_command(config ConfigFile) (err error) {
-	fmt.Println(config)
+// --------------- Command Handlers ---------------
+
+func onCommand(args Args, config ConfigFile) (err error) {
+	fmt.Println("on command")
 	return nil
+}
+
+func offCommand(args Args, config ConfigFile) (err error) {
+	fmt.Println("off command")
+	return nil
+}
+
+func resetCommand(args Args, config ConfigFile) (err error) {
+	fmt.Println("reset command")
+	return nil
+}
+
+func listCommand(args Args, config ConfigFile) (err error) {
+	fmt.Println("list command")
+	return nil
+}
+
+func setAliasCommand(args Args, config ConfigFile) (err error) {
+	fmt.Println("set alias command")
+	return nil
+}
+
+func rmAliasCommand(args Args, config ConfigFile) (err error) {
+	fmt.Println("rm alias command")
+	return nil
+}
+
+func setHostCommand(args Args, config ConfigFile) (err error) {
+	fmt.Println("set host command")
+	return nil
+}
+
+func runCommand(args Args, config ConfigFile) (err error) {
+	var bindings = []struct {
+		key      bool
+		callback func(Args, ConfigFile) error
+	}{
+		{args.On, onCommand},
+		{args.Off, offCommand},
+		{args.Reset, resetCommand},
+		{args.List, listCommand},
+		{args.SetAlias, setAliasCommand},
+		{args.RmAlias, rmAliasCommand},
+		{args.SetHost, setHostCommand},
+	}
+	for _, k := range bindings {
+		if k.key {
+			return k.callback(args, config)
+		}
+	}
+	return errors.New("No valid command")
 }
