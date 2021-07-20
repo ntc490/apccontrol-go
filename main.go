@@ -48,7 +48,7 @@ Options:
 	var args Args
 	rawArgs.Bind(&args)
 	fmt.Println(args)
-	config := ConfigFile{args.Filename}
+	config := NewConfigFile(args.Filename)
 	runCommand(args, config)
 }
 
@@ -56,6 +56,7 @@ Options:
 
 func onCommand(args Args, config ConfigFile) (err error) {
 	fmt.Println("on command")
+	config.Read()
 	return nil
 }
 
