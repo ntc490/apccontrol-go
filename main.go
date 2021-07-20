@@ -57,6 +57,7 @@ Options:
 func onCommand(args Args, config ConfigFile) (err error) {
 	fmt.Println("on command")
 	config.Read()
+	config.Write()
 	return nil
 }
 

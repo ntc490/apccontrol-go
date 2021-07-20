@@ -12,16 +12,16 @@ import (
 type Alias struct {
 	Port        int    `yaml:"port"`
 	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
+	Description string `yaml:"description,omitempty"`
 }
 
 type ConfigFile struct {
 	Filename    string
 	Hostname    string  `yaml:"hostname"`
 	User        string  `yaml:"user"`
-	Password    string  `yaml:"password"`
+	Password    string  `yaml:"password,omitempty"`
 	LastPort    string  `yaml:"last_port"`
-	Description string  `yaml:"description"`
+	Description string  `yaml:"description,omitempty"`
 	Aliases     []Alias `yaml:"aliases"`
 }
 
@@ -55,6 +55,16 @@ func (config *ConfigFile) Read() (err error) {
 }
 
 func (config *ConfigFile) Write() (err error) {
+	config.Description = "modified"
+	data, err := yaml.Marshal(config)
+	filename, err := expandUserDir(config.Filename)
+	if err != nil {
+		return err
+	}
+	err = ioutil.WriteFile(filename, data, 0644)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
