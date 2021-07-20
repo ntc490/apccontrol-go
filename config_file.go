@@ -25,8 +25,8 @@ type ConfigFile struct {
 	Aliases     []Alias `yaml:"aliases"`
 }
 
-func NewConfigFile(filename string) (config ConfigFile) {
-	config = ConfigFile{}
+func NewConfigFile(filename string) (config *ConfigFile) {
+	config = &ConfigFile{}
 	config.Filename = filename
 	return config
 }

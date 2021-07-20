@@ -49,52 +49,52 @@ Options:
 	rawArgs.Bind(&args)
 	fmt.Println(args)
 	config := NewConfigFile(args.Filename)
-	runCommand(args, config)
+	runCommand(&args, config)
 }
 
 // --------------- Command Handlers ---------------
 
-func onCommand(args Args, config ConfigFile) (err error) {
+func onCommand(args *Args, config *ConfigFile) (err error) {
 	fmt.Println("on command")
 	config.Read()
 	config.Write()
 	return nil
 }
 
-func offCommand(args Args, config ConfigFile) (err error) {
+func offCommand(args *Args, config *ConfigFile) (err error) {
 	fmt.Println("off command")
 	return nil
 }
 
-func resetCommand(args Args, config ConfigFile) (err error) {
+func resetCommand(args *Args, config *ConfigFile) (err error) {
 	fmt.Println("reset command")
 	return nil
 }
 
-func listCommand(args Args, config ConfigFile) (err error) {
+func listCommand(args *Args, config *ConfigFile) (err error) {
 	fmt.Println("list command")
 	return nil
 }
 
-func setAliasCommand(args Args, config ConfigFile) (err error) {
+func setAliasCommand(args *Args, config *ConfigFile) (err error) {
 	fmt.Println("set alias command")
 	return nil
 }
 
-func rmAliasCommand(args Args, config ConfigFile) (err error) {
+func rmAliasCommand(args *Args, config *ConfigFile) (err error) {
 	fmt.Println("rm alias command")
 	return nil
 }
 
-func setHostCommand(args Args, config ConfigFile) (err error) {
+func setHostCommand(args *Args, config *ConfigFile) (err error) {
 	fmt.Println("set host command")
 	return nil
 }
 
-func runCommand(args Args, config ConfigFile) (err error) {
+func runCommand(args *Args, config *ConfigFile) (err error) {
 	var bindings = []struct {
 		key      bool
-		callback func(Args, ConfigFile) error
+		callback func(*Args, *ConfigFile) error
 	}{
 		{args.On, onCommand},
 		{args.Off, offCommand},
