@@ -80,6 +80,20 @@ func (config *ConfigFile) AliasByName(name string) (port int, err error) {
 	return 0, errors.New("Invalid alias port name")
 }
 
+func (config *ConfigFile) RmAliasByName(name string) (err error) {
+	for index, alias := range config.Aliases {
+		if alias.Name == name {
+			config.rmAliasIndex(index)
+			return nil
+		}
+	}
+	return errors.New("Invalid alias port name")
+}
+
+func (config *ConfigFile) rmAliasIndex(index int) {
+	config.Aliases = append(config.Aliases[:index], config.Aliases[index+1:]...)
+}
+
 // Expand ~ to $HOME in config file spec
 func expandUserDir(path string) (string, error) {
 	if len(path) == 0 || path[0] != '~' {
