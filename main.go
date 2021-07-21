@@ -83,8 +83,19 @@ func listCommand(args *Args, config *ConfigFile) (err error) {
 }
 
 func setAliasCommand(args *Args, config *ConfigFile) (err error) {
-	fmt.Println("set alias command")
-	return nil
+	err = config.Read()
+	if err != nil {
+		return err
+	}
+
+	alias := args.Name
+	num := args.Num
+	os.Stderr.WriteString("Setting alias '" + alias + "'...\n")
+	err = config.SetAlias(num, alias)
+	if err == nil {
+		config.Write()
+	}
+	return err
 }
 
 func rmAliasCommand(args *Args, config *ConfigFile) (err error) {
