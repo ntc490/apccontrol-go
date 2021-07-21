@@ -88,8 +88,17 @@ func setAliasCommand(args *Args, config *ConfigFile) (err error) {
 }
 
 func rmAliasCommand(args *Args, config *ConfigFile) (err error) {
-	fmt.Println("rm alias command")
-	return nil
+	alias := args.Name
+	os.Stderr.WriteString("Removing alias '" + alias + "'...\n")
+	err = config.Read()
+	if err != nil {
+		return err
+	}
+	err = config.RmAliasByName(alias)
+	if err == nil {
+		config.Write()
+	}
+	return err
 }
 
 func setHostCommand(args *Args, config *ConfigFile) (err error) {
