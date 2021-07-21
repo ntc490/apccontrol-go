@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os/user"
@@ -39,18 +38,13 @@ func (config *ConfigFile) Read() (err error) {
 
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
-		fmt.Println("Could not find config file")
-		return errors.New("Unable to read config file")
+		return err
 	}
 
 	err = yaml.Unmarshal(data, config)
 	if err != nil {
-		fmt.Println("Could not parse yaml data")
-		fmt.Println(err)
 		return err
 	}
-
-	fmt.Println(config)
 	return nil
 }
 
