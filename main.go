@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/docopt/docopt-go"
+	"os"
 )
 
 type Args struct {
@@ -47,9 +48,14 @@ Options:
 	rawArgs, _ := docopt.ParseArgs(usage, nil, "1.0")
 	var args Args
 	rawArgs.Bind(&args)
-	fmt.Println(args)
 	config := NewConfigFile(args.Filename)
-	runCommand(&args, config)
+	err := runCommand(&args, config)
+	error := 0
+	if err != nil {
+		os.Stderr.WriteString(err.Error() + "\n")
+		error = -1
+	}
+	os.Exit(error)
 }
 
 // --------------- Command Handlers ---------------
