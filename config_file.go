@@ -80,6 +80,22 @@ func (config *ConfigFile) AliasByName(name string) (port int, err error) {
 	return 0, errors.New("Invalid alias port name")
 }
 
+// Might make sense to return a different value if we add a new alias
+// or change an existing one
+func (config *ConfigFile) SetAlias(num int, name string) (err error) {
+	for index, alias := range config.Aliases {
+		if alias.Port == num {
+			alias.Name = name
+			alias.Description = ""
+			config.Aliases[index] = alias
+			return nil
+		}
+	}
+	alias := Alias{num, name, ""}
+	config.Aliases = append(config.Aliases, alias)
+	return nil
+}
+
 func (config *ConfigFile) RmAliasByName(name string) (err error) {
 	for index, alias := range config.Aliases {
 		if alias.Name == name {
