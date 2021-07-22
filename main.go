@@ -7,7 +7,6 @@ import (
 	"os"
 )
 
-
 // --------------- Program Usage ---------------
 
 var usage = `apc - Control APC network power strip
@@ -31,7 +30,6 @@ Commands:
 
 Options:
   --config <filename>    Point to custom config file [default: ~/.config/apc/config]`
-
 
 type Args struct {
 	On       bool   `docopt:"on"`
@@ -73,6 +71,12 @@ func onCommand(args *Args, config *ConfigFile) (err error) {
 	if err != nil {
 		return err
 	}
+	apc := NewApcConnectionFromConfigFile(config)
+	err = apc.On(args.Port)
+	if err != nil {
+		return err
+	}
+	// Update config.LastPort
 	config.Write()
 	return nil
 }

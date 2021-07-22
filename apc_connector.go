@@ -1,7 +1,9 @@
 package main
 
 import (
-//	"errors"
+	"errors"
+	"fmt"
+	"strconv"
 )
 
 type ApcConnector struct {
@@ -10,43 +12,47 @@ type ApcConnector struct {
 	Password string
 	aliases  []Alias
 	LastPort string
+	config   *ConfigFile
 }
 
-func ApcConnectorFromConfig(config *ConfigFile) (apc *ApcConnector) {
+func NewApcConnectionFromConfigFile(config *ConfigFile) (apc *ApcConnector) {
 	apc = &ApcConnector{}
 	apc.Host = config.Hostname
 	apc.User = config.User
 	apc.Password = config.Password
 	apc.LastPort = config.LastPort
+	apc.config = config
 	return apc
 }
 
-func (apc *ApcConnector) ApcPortName(num int) string {
-	for _, alias := range apc.aliases {
-		if alias.Port == num {
-			return alias.Name
-		}
+func (apc *ApcConnector) On(port string) (err error) {
+	num, err := apc.portNumFromString(port)
+	if err != nil {
+		return err
 	}
-	return "Unknown"
+	fmt.Println("Turning on port:", num)
+	return nil
 }
 
-func (apc *ApcConnector) ApcPortNum(name string) int {
-	for _, alias := range apc.aliases {
-		if alias.Name == name {
-			return alias.Port
-		}
+func (apc *ApcConnector) Off(port string) (err error) {
+	return nil
+}
+
+func (apc *ApcConnector) Reset(port string) (err error) {
+	return nil
+}
+
+func (apc *ApcConnector) portNumFromString(port string) (num int, err error) {
+	// Check if the user simply passed in a port number
+	if num, err := strconv.Atoi(port); err == nil {
+		return num, nil
 	}
-	return -1
-}
 
-func (apc *ApcConnector) ApcOn() (err error) {
-	return nil
-}
+	// Can we convert the alias name string to a port number?
+	if num, err = apc.config.AliasNumByName(port); err == nil {
+		return num, nil
+	}
 
-func (apc *ApcConnector) ApcOff() (err error) {
-	return nil
-}
-
-func (apc *ApcConnector) ApcReset() (err error) {
-	return nil
+	// Couldn't do anything with the port string
+	return 0, errors.New("Unable to decode port '" + port + "'")
 }
