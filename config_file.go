@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os/user"
 	"path/filepath"
+	"strconv"
 )
 
 type Alias struct {
@@ -83,6 +84,10 @@ func (config *ConfigFile) AliasByName(name string) (port int, err error) {
 // Might make sense to return a different value if we add a new alias
 // or change an existing one
 func (config *ConfigFile) SetAlias(num int, name string) (err error) {
+	aliasNum, err := config.AliasByName(name)
+	if err == nil && num != aliasNum {
+		return errors.New("Alias name already in use for port " + strconv.Itoa(aliasNum))
+	}
 	for index, alias := range config.Aliases {
 		if alias.Port == num {
 			alias.Name = name
