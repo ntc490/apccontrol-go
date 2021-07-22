@@ -7,23 +7,10 @@ import (
 	"os"
 )
 
-type Args struct {
-	On       bool   `docopt:"on"`
-	Off      bool   `docopt:"off"`
-	Reset    bool   `docopt:"reset"`
-	List     bool   `docopt:"list"`
-	SetAlias bool   `docopt:"set-alias"`
-	RmAlias  bool   `docopt:"rm-alias"`
-	SetHost  bool   `docopt:"set-host"`
-	Port     string `docopt:"<port>"`
-	Name     string `docopt:"<name>"`
-	Num      int    `docopt:"<num>"`
-	Hostname string `docopt:"<hostname>"`
-	Filename string `docopt:"--config"`
-}
 
-func main() {
-	usage := `apc - Control APC network power strip
+// --------------- Program Usage ---------------
+
+var usage = `apc - Control APC network power strip
 
 Usage:
   apc.py [options] (on [<port>] | off [<port>] | reset [<port>] | list)
@@ -45,6 +32,23 @@ Commands:
 Options:
   --config <filename>    Point to custom config file [default: ~/.config/apc/config]`
 
+
+type Args struct {
+	On       bool   `docopt:"on"`
+	Off      bool   `docopt:"off"`
+	Reset    bool   `docopt:"reset"`
+	List     bool   `docopt:"list"`
+	SetAlias bool   `docopt:"set-alias"`
+	RmAlias  bool   `docopt:"rm-alias"`
+	SetHost  bool   `docopt:"set-host"`
+	Port     string `docopt:"<port>"`
+	Name     string `docopt:"<name>"`
+	Num      int    `docopt:"<num>"`
+	Hostname string `docopt:"<hostname>"`
+	Filename string `docopt:"--config"`
+}
+
+func main() {
 	rawArgs, _ := docopt.ParseArgs(usage, nil, "1.0")
 	var args Args
 	rawArgs.Bind(&args)
