@@ -7,20 +7,11 @@ import (
 )
 
 type ApcConnector struct {
-	Host     string
-	User     string
-	Password string
-	aliases  []Alias
-	LastPort string
-	config   *ConfigFile
+	config *ConfigFile
 }
 
 func NewApcConnectionFromConfigFile(config *ConfigFile) (apc *ApcConnector) {
 	apc = &ApcConnector{}
-	apc.Host = config.Hostname
-	apc.User = config.User
-	apc.Password = config.Password
-	apc.LastPort = config.LastPort
 	apc.config = config
 	return apc
 }
@@ -31,6 +22,8 @@ func (apc *ApcConnector) On(port string) (err error) {
 		return err
 	}
 	fmt.Println("Turning on port:", num)
+	// If successful - update the last port
+	apc.config.LastPort = num
 	return nil
 }
 
@@ -43,6 +36,12 @@ func (apc *ApcConnector) Reset(port string) (err error) {
 }
 
 func (apc *ApcConnector) portNumFromString(port string) (num int, err error) {
+	// An empty string should defer to the LastPort var
+	if port == "" {
+		fmt.Println("Last port is", apc.config.LastPort)
+		return apc.config.LastPort, nil
+	}
+
 	// Check if the user simply passed in a port number
 	if num, err := strconv.Atoi(port); err == nil {
 		return num, nil
