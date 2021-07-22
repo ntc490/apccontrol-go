@@ -52,7 +52,6 @@ func (apc *ApcConnector) Reset(port string) (err error) {
 func (apc *ApcConnector) portNumFromString(port string) (num int, err error) {
 	// An empty string should defer to the LastPort var
 	if port == "" {
-		fmt.Println("Last port is", apc.config.LastPort)
 		return apc.config.LastPort, nil
 	}
 
