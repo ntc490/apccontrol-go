@@ -20,7 +20,7 @@ type ConfigFile struct {
 	Hostname    string  `yaml:"hostname"`
 	User        string  `yaml:"user"`
 	Password    string  `yaml:"password,omitempty"`
-	LastPort    int     `yaml:"last_port,omitempty"`
+	LastPort    int     `yaml:"last_port"`
 	Description string  `yaml:"description,omitempty"`
 	Aliases     []Alias `yaml:"aliases"`
 }
