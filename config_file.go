@@ -111,6 +111,16 @@ func (config *ConfigFile) RmAliasByName(name string) (err error) {
 	return errors.New("Invalid alias port name")
 }
 
+func (config *ConfigFile) CheckBasicSettings() (err error) {
+	if config.Hostname == "" {
+		return errors.New("Config file must contain APC hostname")
+	}
+	if config.User == "" {
+		return errors.New("Config file must contain APC device user")
+	}
+	return nil
+}
+
 func (config *ConfigFile) rmAliasIndex(index int) {
 	config.Aliases = append(config.Aliases[:index], config.Aliases[index+1:]...)
 }

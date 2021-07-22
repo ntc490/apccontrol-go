@@ -65,8 +65,14 @@ func main() {
 // --------------- Command Handlers ---------------
 
 func onCommand(args *Args, config *ConfigFile) (err error) {
-	fmt.Println("on command")
-	config.Read()
+	err = config.Read()
+	if err != nil {
+		return err
+	}
+	err = config.CheckBasicSettings()
+	if err != nil {
+		return err
+	}
 	config.Write()
 	return nil
 }
