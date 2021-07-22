@@ -127,7 +127,12 @@ func rmAliasCommand(args *Args, config *ConfigFile) (err error) {
 }
 
 func setHostCommand(args *Args, config *ConfigFile) (err error) {
-	fmt.Println("set host command")
+	err = config.Read()
+	if err != nil {
+		return err
+	}
+	config.Hostname = args.Hostname
+	config.Write()
 	return nil
 }
 
