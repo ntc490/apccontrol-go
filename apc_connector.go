@@ -28,10 +28,24 @@ func (apc *ApcConnector) On(port string) (err error) {
 }
 
 func (apc *ApcConnector) Off(port string) (err error) {
+	num, err := apc.portNumFromString(port)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Turning off port:", num)
+	// If successful - update the last port
+	apc.config.LastPort = num
 	return nil
 }
 
 func (apc *ApcConnector) Reset(port string) (err error) {
+	num, err := apc.portNumFromString(port)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Reset port:", num)
+	// If successful - update the last port
+	apc.config.LastPort = num
 	return nil
 }
 

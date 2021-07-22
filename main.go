@@ -82,12 +82,40 @@ func onCommand(args *Args, config *ConfigFile) (err error) {
 }
 
 func offCommand(args *Args, config *ConfigFile) (err error) {
-	fmt.Println("off command")
+	err = config.Read()
+	if err != nil {
+		return err
+	}
+	err = config.CheckBasicSettings()
+	if err != nil {
+		return err
+	}
+	apc := NewApcConnectionFromConfigFile(config)
+	err = apc.Off(args.Port)
+	if err != nil {
+		return err
+	}
+	// Update config.LastPort
+	config.Write()
 	return nil
 }
 
 func resetCommand(args *Args, config *ConfigFile) (err error) {
-	fmt.Println("reset command")
+	err = config.Read()
+	if err != nil {
+		return err
+	}
+	err = config.CheckBasicSettings()
+	if err != nil {
+		return err
+	}
+	apc := NewApcConnectionFromConfigFile(config)
+	err = apc.Reset(args.Port)
+	if err != nil {
+		return err
+	}
+	// Update config.LastPort
+	config.Write()
 	return nil
 }
 
