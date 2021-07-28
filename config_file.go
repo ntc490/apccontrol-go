@@ -16,7 +16,7 @@ type Alias struct {
 }
 
 type ConfigFile struct {
-	Filename    string
+	filename    string
 	modified    bool
 	Hostname    string  `yaml:"hostname"`
 	User        string  `yaml:"user"`
@@ -28,12 +28,12 @@ type ConfigFile struct {
 
 func NewConfigFile(filename string) (config *ConfigFile) {
 	config = &ConfigFile{}
-	config.Filename = filename
+	config.filename = filename
 	return config
 }
 
 func (config *ConfigFile) Read() (err error) {
-	filename, err := expandUserDir(config.Filename)
+	filename, err := expandUserDir(config.filename)
 	if err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func (config *ConfigFile) Read() (err error) {
 func (config *ConfigFile) Write() (err error) {
 	config.Description = "modified"
 	data, err := yaml.Marshal(config)
-	filename, err := expandUserDir(config.Filename)
+	filename, err := expandUserDir(config.filename)
 	if err != nil {
 		return err
 	}
