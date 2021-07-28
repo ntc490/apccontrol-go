@@ -23,7 +23,7 @@ func (apc *ApcConnector) On(port string) (err error) {
 	}
 	fmt.Println("Turning on port:", num)
 	// If successful - update the last port
-	apc.config.LastPort = num
+	apc.config.SetLastPort(num)
 	return nil
 }
 
@@ -34,7 +34,7 @@ func (apc *ApcConnector) Off(port string) (err error) {
 	}
 	fmt.Println("Turning off port:", num)
 	// If successful - update the last port
-	apc.config.LastPort = num
+	apc.config.SetLastPort(num)
 	return nil
 }
 
@@ -45,7 +45,7 @@ func (apc *ApcConnector) Reset(port string) (err error) {
 	}
 	fmt.Println("Reset port:", num)
 	// If successful - update the last port
-	apc.config.LastPort = num
+	apc.config.SetLastPort(num)
 	return nil
 }
 

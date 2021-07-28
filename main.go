@@ -76,8 +76,7 @@ func onCommand(args *Args, config *ConfigFile) (err error) {
 	if err != nil {
 		return err
 	}
-	// Update config.LastPort
-	config.Write()
+	config.WriteIfModified()
 	return nil
 }
 
@@ -96,7 +95,7 @@ func offCommand(args *Args, config *ConfigFile) (err error) {
 		return err
 	}
 	// Update config.LastPort
-	config.Write()
+	config.WriteIfModified()
 	return nil
 }
 
@@ -115,7 +114,7 @@ func resetCommand(args *Args, config *ConfigFile) (err error) {
 		return err
 	}
 	// Update config.LastPort
-	config.Write()
+	config.WriteIfModified()
 	return nil
 }
 
@@ -135,7 +134,7 @@ func setAliasCommand(args *Args, config *ConfigFile) (err error) {
 	os.Stderr.WriteString("Setting alias '" + alias + "'...\n")
 	err = config.SetAlias(num, alias)
 	if err == nil {
-		config.Write()
+		config.WriteIfModified()
 	}
 	return err
 }
@@ -149,7 +148,7 @@ func rmAliasCommand(args *Args, config *ConfigFile) (err error) {
 	}
 	err = config.RmAliasByName(alias)
 	if err == nil {
-		config.Write()
+		config.WriteIfModified()
 	}
 	return err
 }
@@ -159,8 +158,8 @@ func setHostCommand(args *Args, config *ConfigFile) (err error) {
 	if err != nil {
 		return err
 	}
-	config.Hostname = args.Hostname
-	config.Write()
+	config.SetHostname(args.Hostname)
+	config.WriteIfModified()
 	return nil
 }
 

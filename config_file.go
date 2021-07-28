@@ -17,6 +17,7 @@ type Alias struct {
 
 type ConfigFile struct {
 	Filename    string
+	modified    bool
 	Hostname    string  `yaml:"hostname"`
 	User        string  `yaml:"user"`
 	Password    string  `yaml:"password,omitempty"`
@@ -60,7 +61,29 @@ func (config *ConfigFile) Write() (err error) {
 	if err != nil {
 		return err
 	}
+	config.modified = false
 	return nil
+}
+
+func (config *ConfigFile) WriteIfModified() (err error) {
+	if config.modified {
+		return config.Write()
+	}
+	return nil
+}
+
+func (config *ConfigFile) SetLastPort(num int) {
+	if num != config.LastPort {
+		config.modified = true
+		config.LastPort = num
+	}
+}
+
+func (config *ConfigFile) SetHostname(hostname string) {
+	if hostname != config.Hostname {
+		config.modified = true
+		config.Hostname = hostname
+	}
 }
 
 func (config *ConfigFile) AliasNameByNum(num int) (alias string, err error) {
@@ -90,14 +113,20 @@ func (config *ConfigFile) SetAlias(num int, name string) (err error) {
 	}
 	for index, alias := range config.Aliases {
 		if alias.Port == num {
+			if alias.Name == name {
+				// No need to update dup name
+				return nil
+			}
 			alias.Name = name
 			alias.Description = ""
 			config.Aliases[index] = alias
+			config.modified = true
 			return nil
 		}
 	}
 	alias := Alias{num, name, ""}
 	config.Aliases = append(config.Aliases, alias)
+	config.modified = true
 	return nil
 }
 
@@ -105,6 +134,7 @@ func (config *ConfigFile) RmAliasByName(name string) (err error) {
 	for index, alias := range config.Aliases {
 		if alias.Name == name {
 			config.rmAliasIndex(index)
+			config.modified = true
 			return nil
 		}
 	}
