@@ -51,7 +51,6 @@ func (config *ConfigFile) Read() (err error) {
 }
 
 func (config *ConfigFile) Write() (err error) {
-	config.Description = "modified"
 	data, err := yaml.Marshal(config)
 	filename, err := expandUserDir(config.filename)
 	if err != nil {
