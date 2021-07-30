@@ -1,3 +1,5 @@
 # Todo
 - Preserve description for ports when updating aliases
 - Allow setting description when setting aliases
+- Print descriptions in 'list' output?
+- Check public/private designators for everything
