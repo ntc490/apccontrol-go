@@ -35,12 +35,15 @@ func NewApcConnectionFromConfigFile(config *ConfigFile) (apc *ApcConnector) {
 func (apc *ApcConnector) List() (err error) {
 	status, err := apc.getOutletStatus()
 
-	fmt.Println("Port   Alias                Status")
-	fmt.Println("----------------------------------")
+	fmt.Println("   Port   Alias                Status")
 	for num, state := range status.States {
 		num += 1
+		flag := " "
+		if num == apc.config.LastPort {
+			flag = "*"
+		}
 		name, _ := apc.config.AliasNameByNum(num)
-		fmt.Printf("%d:     %-20s %6s\n", num, name, state)
+		fmt.Printf("%s  %d:     %-20s %6s\n", flag, num, name, state)
 	}
 	return err
 }
