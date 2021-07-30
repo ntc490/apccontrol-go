@@ -15,6 +15,7 @@ const CONTROL_PORT = "1"
 const PORT_ON_COMMAND = "1"
 const PORT_OFF_COMMAND = "2"
 const PORT_RESET_COMMAND = "3"
+const timeout = 10 * time.Second
 
 type ApcConnector struct {
 	config *ConfigFile
@@ -172,8 +173,6 @@ func (apc *ApcConnector) controlOutlet(port int, command string) (err error) {
 
 	return nil
 }
-
-const timeout = 10 * time.Second
 
 func checkErr(err error) {
 	if err != nil {
