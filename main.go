@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"github.com/docopt/docopt-go"
 	"os"
 )
@@ -119,7 +118,19 @@ func resetCommand(args *Args, config *ConfigFile) (err error) {
 }
 
 func listCommand(args *Args, config *ConfigFile) (err error) {
-	fmt.Println("list command")
+	err = config.Read()
+	if err != nil {
+		return err
+	}
+	err = config.CheckBasicSettings()
+	if err != nil {
+		return err
+	}
+	apc := NewApcConnectionFromConfigFile(config)
+	err = apc.List()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

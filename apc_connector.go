@@ -3,10 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/ziutek/telnet"
+	"log"
+	"regexp"
 	"strconv"
 	"time"
-	"log"
-	"github.com/ziutek/telnet"
 )
 
 const OUTLET_MANAGER = "1"
@@ -19,10 +20,28 @@ type ApcConnector struct {
 	config *ConfigFile
 }
 
+type ApcStatus struct {
+	Ports  int
+	States []string
+}
+
 func NewApcConnectionFromConfigFile(config *ConfigFile) (apc *ApcConnector) {
 	apc = &ApcConnector{}
 	apc.config = config
 	return apc
+}
+
+func (apc *ApcConnector) List() (err error) {
+	status, err := apc.getOutletStatus()
+
+	fmt.Println("Port   Alias                Status")
+	fmt.Println("----------------------------------")
+	for num, state := range status.States {
+		num += 1
+		name, _ := apc.config.AliasNameByNum(num)
+		fmt.Printf("%d:     %-20s %6s\n", num, name, state)
+	}
+	return err
 }
 
 func (apc *ApcConnector) On(port string) (err error) {
@@ -76,6 +95,45 @@ func (apc *ApcConnector) portNumFromString(port string) (num int, err error) {
 
 	// Couldn't do anything with the port string
 	return 0, errors.New("Unable to decode port '" + port + "'")
+}
+
+/*
+
+   ------- Current MasterSwitch Status -------------------------------------------
+   Device 1:ON         Device 2:OFF        Device 3:OFF        Device 4:ON
+   Device 5:OFF        Device 6:OFF        Device 7:OFF        Device 8:ON
+
+   ------- Control Console -------------------------------------------------------
+
+*/
+func (apc *ApcConnector) getOutletStatus() (status ApcStatus, err error) {
+	server := apc.config.Hostname + ":23"
+
+	t, err := telnet.Dial("tcp", server)
+	if err != nil {
+		return status, err
+	}
+
+	t.SetUnixWriteMode(true)
+	expect(t, "User Name :")
+	sendln(t, apc.config.User)
+	expect(t, "Password  :")
+	sendln(t, apc.config.Password)
+
+	data, err := t.ReadUntil("<ESC>")
+	if err != nil {
+		return status, err
+	}
+
+	re := regexp.MustCompile(`(?s)Device 1:(OFF|ON ) +Device 2:(OFF|ON ) +Device 3:(OFF|ON ) +Device 4:(OFF|ON ).*Device 5:(OFF|ON ) +Device 6:(OFF|ON ) +Device 7:(OFF|ON ) +Device 8:(OFF|ON )`)
+	matches := re.FindStringSubmatch(string(data))
+	if matches == nil {
+		return status, errors.New("Unable to read status from APC device")
+	}
+
+	status.Ports = len(matches) - 1
+	status.States = matches[1:]
+	return status, nil
 }
 
 func (apc *ApcConnector) controlOutlet(port int, command string) (err error) {
