@@ -1,0 +1,7 @@
+hostname: labpower
+user: user
+password: password
+last_port: 8
+aliases:
+- port: 8
+  name: voip
