@@ -14,3 +14,8 @@ use the config file, or specify all information
 on the command line.  The apc application needs
 a hostname, user, and password to complete most
 operations.
+
+
+    user: apc
+    password: password
+    hostname: apc
