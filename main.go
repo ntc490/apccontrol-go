@@ -11,11 +11,11 @@ import (
 var usage = `apc - Control APC network power strip
 
 Usage:
-  apc.py [options] (on [<port>] | off [<port>] | reset [<port>] | list)
-  apc.py [options] set-alias <name> <num>
-  apc.py [options] rm-alias <name>
-  apc.py [options] set-host <hostname>
-  apc.py --help
+  apc [options] (on [<port>] | off [<port>] | reset [<port>] | list)
+  apc [options] set-alias <name> <num>
+  apc [options] rm-alias <name>
+  apc [options] set-host <hostname>
+  apc --help
 
 Commands:
   on                     Turn port on [defaults to last port if empty]
