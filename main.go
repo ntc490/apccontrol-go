@@ -28,7 +28,7 @@ Commands:
   --help                 Print this usage screen
 
 Options:
-  --config <filename>    Point to custom config file [default: ~/.config/apc/config]`
+  --config <filename>    Point to custom config file [default: ~/.config/apc/config.yml]`
 
 type Args struct {
 	On       bool   `docopt:"on"`
