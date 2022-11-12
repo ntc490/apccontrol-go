@@ -102,13 +102,11 @@ func (apc *ApcConnector) portNumFromString(port string) (num int, err error) {
 }
 
 /*
+------- Current MasterSwitch Status -------------------------------------------
+Device 1:ON         Device 2:OFF        Device 3:OFF        Device 4:ON
+Device 5:OFF        Device 6:OFF        Device 7:OFF        Device 8:ON
 
-   ------- Current MasterSwitch Status -------------------------------------------
-   Device 1:ON         Device 2:OFF        Device 3:OFF        Device 4:ON
-   Device 5:OFF        Device 6:OFF        Device 7:OFF        Device 8:ON
-
-   ------- Control Console -------------------------------------------------------
-
+------- Control Console -------------------------------------------------------
 */
 func (apc *ApcConnector) getOutletStatus() (status ApcStatus, err error) {
 	server := apc.config.Hostname + ":23"
